@@ -50,7 +50,7 @@
 
         //Kondisi apakah berhasil atau tidak dalam mengeksekusi query diatas
         if ($hasil) {
-            header("Location:create.php");
+            header("Location:index.php");
         }
         else {
             echo "<div class='alert alert-danger'> Data Gagal diupdate.</div>";
