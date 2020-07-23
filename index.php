@@ -1,75 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Daftar Produk</title>
+  <title>Daftar Produk</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
 </head>
 <body>
 <div class="container">
-    <?php
-    //Include file koneksi, untuk koneksikan ke database
-    include "sambung.php";
-    
-    //Fungsi untuk mencegah inputan karakter yang tidak sesuai
-    function input($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
-    //Cek apakah ada kiriman form dari method post
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    <br>
+    <h4>Daftar Produk</h4>
+<?php
 
-        $nama_produk=input($_POST["nama_produk"]);
-        $keterangan=input($_POST["keterangan"]);
-        $harga=input($_POST["harga"]);
-        $jumlah=input($_POST["jumlah"]);
+    include "host.php";
 
-        //Query input menginput data kedalam tabel anggota
-        $sql="insert into produk (nama_produk,keterangan,harga,jumlah) values
-		('$nama_produk','$keterangan','$harga','$jumlah')";
 
-        //Mengeksekusi/menjalankan query diatas
+    if (isset($_GET['id_produk'])) {
+        $id_produk=htmlspecialchars($_GET["id_produk"]);
+
+        $sql="delete from produk where id_produk='$id_produk' ";
         $hasil=mysqli_query($kon,$sql);
 
-        //Kondisi apakah berhasil atau tidak dalam mengeksekusi query diatas
-        if ($hasil) {
-            header("Location:index.php");
+
+            if ($hasil) {
+                header("Location:index.php");
+
+            }
+            else {
+                echo "<div class='alert alert-danger'> Data Gagal dihapus.</div>";
+
+            }
         }
-        else {
-            echo "<div class='alert alert-danger'> Data Gagal disimpan.</div>";
+?>
 
+
+    <table class="table table-bordered table-hover">
+        <br>
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>Nama produk</th>
+            <th>Keterangan</th>
+            <th>Harga</th>
+            <th>Jumlah</th>
+            <th colspan='2'>Aksi</th>
+
+        </tr>
+        </thead>
+        <?php
+        include "host.php";
+        $sql="select * from produk order by id_produk desc";
+
+        $hasil=mysqli_query($kon,$sql);
+        $no=0;
+        while ($data = mysqli_fetch_array($hasil)) {
+            $no++;
+
+            ?>
+            <tbody>
+            <tr>
+                <td><?php echo $no;?></td>
+                <td><?php echo $data["nama_produk"]; ?></td>
+                <td><?php echo $data["keterangan"];   ?></td>
+                <td><?php echo $data["harga"];   ?></td>
+                <td><?php echo $data["jumlah"];   ?></td>
+                <td>
+                    <a href="update.php?id_produk=<?php echo htmlspecialchars($data['id_produk']); ?>" class="btn btn-warning" role="button">Update</a>
+                    <a href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>?id_produk=<?php echo $data['id_produk']; ?>" class="btn btn-danger" role="button">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+            <?php
         }
+        ?>
+    </table>
+    <a href="create.php" class="btn btn-primary" role="button">Tambah Data</a>
 
-    }
-    ?>
-    <h2>Input Data</h2>
-
-
-    <form action="<?php echo $_SERVER["PHP_SELF"];?>" method="post">
-        <div class="form-group">
-            <label>Nama Produk:</label>
-            <input type="text" name="nama_produk" class="form-control" placeholder="Tulis nama produk" required />
-
-        </div>
-        <div class="form-group">
-            <label>Keterangan:</label>
-            <input type="text" name="keterangan" class="form-control" placeholder="Keteranga" required/>
-
-        </div>
-        <div class="form-group">
-            <label>Harga:</label>
-            <input type="text" name="harga" class="form-control" placeholder="Masukkan Harga" required/>
-
-        </div>
-        <div class="form-group">
-            <label>Jumlah:</label>
-            <input type="text" name="jumlah" class="form-control" placeholder="Jumlah" required/>
-        </div>
-
-        <button type="submit" name="submit" class="btn btn-primary">Masukkan</button>
-    </form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
