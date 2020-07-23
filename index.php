@@ -10,7 +10,7 @@
     <h4>Daftar Produk</h4>
 <?php
 
-    include "host.php";
+    include "sambung.php";
 
 
     if (isset($_GET['id_produk'])) {
@@ -46,7 +46,7 @@
         </tr>
         </thead>
         <?php
-        include "host.php";
+        include "sambung.php";
         $sql="select * from produk order by id_produk desc";
 
         $hasil=mysqli_query($kon,$sql);
